@@ -1,6 +1,7 @@
 {
   "allowManagedPermissionRulesOnly": true,
   "allowManagedHooksOnly": true,
+  "allowManagedMcpServersOnly": true,
   "autoUpdaterStatus": "disabled",
 
   "permissions": {
@@ -298,7 +299,68 @@
       "Bash(pass generate *)",
       "Bash(lpass *)",
 
+      "Bash(sh -c *)",
+      "Bash(sh -i*)",
+      "Bash(bash -c *)",
+      "Bash(bash -i*)",
+      "Bash(zsh -c *)",
+      "Bash(dash -c *)",
+      "Bash(eval *)",
+      "Bash(source *)",
+      "Bash(exec *)",
+      "Bash(nohup *)",
+      "Bash(xargs *)",
+      "Bash(base64 *)",
+      "Bash(xxd *)",
+      "Bash(openssl *)",
+
       "WebFetch"
+    ]
+  },
+
+  "sandbox": {
+    "filesystem": {
+      "denyRead": [
+        "~/.ssh",
+        "~/.aws",
+        "~/.azure",
+        "~/.config/gcloud",
+        "~/.kube",
+        "~/.gnupg",
+        "~/.netrc",
+        "~/.npmrc",
+        "~/.docker/config.json"
+      ],
+      "denyWrite": [
+        "~/.ssh",
+        "~/.aws",
+        "~/.config",
+        "~/.bashrc",
+        "~/.zshrc",
+        "~/.profile",
+        "//etc",
+        "//usr",
+        "//bin",
+        "//sbin"
+      ]
+    },
+    "network": {
+      "allowedDomains": [],
+      "allowManagedDomainsOnly": true
+    }
+  },
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CMD=$(cat | jq -r \".tool_input.command // empty\"); if [ -z \"$CMD\" ]; then exit 0; fi; PATTERNS=\"(^|[;\\&\\|\\`\\$\\(])\\s*(curl|wget|nc|netcat|socat|ssh|scp|rsync|telnet|ncat|ftp|sftp)\\b\" ; PATTERNS2=\"(^|[;\\&\\|\\`\\$\\(])\\s*(sudo|su|chmod|chown|passwd|usermod|useradd|mount|umount)\\b\" ; PATTERNS3=\"(^|[;\\&\\|\\`\\$\\(])\\s*(docker|podman|kubectl|helm|terraform|vault|aws|az|gcloud)\\b\" ; PATTERNS4=\"(^|[;\\&\\|\\`\\$\\(])\\s*(python3?|node|ruby|perl|php)\\s+-(c|e)\\b\" ; PATTERNS5=\"(^|[;\\&\\|\\`\\$\\(])\\s*(sh|bash|zsh|dash|ksh)\\s+-[ci]\" ; PATTERNS6=\"(^|[;\\&\\|\\`\\$\\(])\\s*(eval|exec|source|nohup)\\b\" ; PATTERNS7=\"(^|[;\\&\\|\\`\\$\\(])\\s*(base64|xxd|openssl)\\b\" ; PATTERNS8=\"(^|[;\\&\\|\\`\\$\\(])\\s*(cat|head|tail|less|more|strings|xxd|od|hexdump)\\s+.*(\\.env|\\.pem|\\.key|id_rsa|id_ed25519|credentials|secret|token|password|shadow|passwd)\" ; PATTERNS9=\"(^|[;\\&\\|\\`\\$\\(])\\s*(rm\\s+-r|shred|mkfifo|mknod)\\b\" ; PATTERNSA=\"(^|[;\\&\\|\\`\\$\\(])\\s*(crontab|launchctl|systemctl|schtasks|at\\b|systemd-run)\" ; PATTERNSB=\"(^|[;\\&\\|\\`\\$\\(])\\s*(powershell|pwsh|cmd\\.exe|wscript|cscript|mshta|rundll32|regsvr32|msiexec|certutil|bitsadmin)\\b\" ; PATTERNSC=\"\\|\\s*(sh|bash|zsh|dash|python|node|ruby|perl|php)\\b\" ; for P in \"$PATTERNS\" \"$PATTERNS2\" \"$PATTERNS3\" \"$PATTERNS4\" \"$PATTERNS5\" \"$PATTERNS6\" \"$PATTERNS7\" \"$PATTERNS8\" \"$PATTERNS9\" \"$PATTERNSA\" \"$PATTERNSB\" \"$PATTERNSC\"; do if echo \"$CMD\" | grep -qEi \"$P\"; then echo \"{\\\"decision\\\": \\\"block\\\", \\\"reason\\\": \\\"Enterprise policy: command matched forbidden pattern\\\"}\" >&2; exit 2; fi; done; exit 0'"
+          }
+        ]
+      }
     ]
   },
 
