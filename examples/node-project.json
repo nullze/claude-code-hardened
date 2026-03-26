@@ -1,0 +1,85 @@
+{
+  "_comment": [
+    "claude-code-hardened — Node.js Project Minimal Allow-List",
+    "Use Case: Node.js/TypeScript codebases using pre-installed npm scripts.",
+    "Assumptions:",
+    "  - node_modules is pre-installed and locked via package-lock.json",
+    "  - No npm install, yarn add, or pnpm add permitted during sessions",
+    "  - Scripts run via 'npm run <script>' only — no arbitrary node execution",
+    "  - Project does not contain inline secrets (enforce via pre-commit + gitleaks)",
+    "Instructions:",
+    "  Copy this file to your project root at .claude/settings.json",
+    "  This file EXTENDS the base deny-list — it does not replace it.",
+    "  The managed_settings.json deny-list always takes precedence."
+  ],
+
+  "permissions": {
+    "allow": [
+      "Read(**/*.ts)",
+      "Read(**/*.tsx)",
+      "Read(**/*.js)",
+      "Read(**/*.jsx)",
+      "Read(**/*.mjs)",
+      "Read(**/*.cjs)",
+      "Read(**/*.json)",
+      "Read(**/*.yaml)",
+      "Read(**/*.yml)",
+      "Read(**/*.toml)",
+      "Read(**/*.md)",
+      "Read(**/*.txt)",
+      "Read(**/*.lock)",
+      "Read(**/.nvmrc)",
+      "Read(**/.node-version)",
+      "Read(**/.eslintrc*)",
+      "Read(**/.prettierrc*)",
+      "Read(**/tsconfig*.json)",
+      "Read(**/jest.config*)",
+      "Read(**/vitest.config*)",
+      "Read(**/vite.config*)",
+      "Read(**/.gitignore)",
+      "Read(**/Dockerfile)",
+      "Read(**/*.dockerfile)",
+
+      "Bash(git status)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+
+      "Bash(npm run test)",
+      "Bash(npm run test:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run format:check)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run build)",
+      "Bash(npm run check)",
+      "Bash(npm test)",
+      "Bash(npm run *)",
+
+      "Bash(npx tsc --noEmit)",
+      "Bash(npx tsc --noEmit *)",
+      "Bash(npx eslint *)",
+      "Bash(npx prettier --check *)",
+
+      "Bash(ls *)",
+      "Bash(ls)",
+      "Bash(pwd)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(find . *)",
+      "Bash(grep *)",
+      "Bash(echo *)",
+      "Bash(dir *)",
+      "Bash(dir)"
+    ]
+  },
+
+  "rules": [
+    "PROJECT CONTEXT: You are assisting with a Node.js/TypeScript project. Your permitted actions are: reading source files, running pre-defined npm scripts for testing, linting, formatting, and type-checking. You must not install, upgrade, or remove packages under any circumstance.",
+    "LOCKFILE POLICY: package-lock.json, yarn.lock, and pnpm-lock.yaml are frozen. You must not modify lockfiles or suggest dependency changes without stopping for human review.",
+    "BUILD POLICY: You may run the build script to verify compilation, but must not deploy, publish, or push build artifacts without explicit human approval that names the target environment."
+  ]
+}
