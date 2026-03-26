@@ -80,7 +80,7 @@ curl -o ~/.claude/settings.json \
 New-Item -ItemType Directory -Force -Path "$env:APPDATA\Claude"
 Copy-Item "$env:APPDATA\Claude\settings.json" `
   "$env:APPDATA\Claude\settings.json.bak" -ErrorAction SilentlyContinue
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/YOUR_ORG/claude-code-hardened/main/settings.json" `
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/nullze/claude-code-hardened/main/settings.json" `
   -OutFile "$env:APPDATA\Claude\settings.json"
 ```
 
@@ -89,7 +89,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/YOUR_ORG/claude-code-h
 ```bash
 mkdir -p .claude
 curl -o .claude/settings.json \
-  https://raw.githubusercontent.com/YOUR_ORG/claude-code-hardened/main/settings.json
+  https://raw.githubusercontent.com/nullze/claude-code-hardened/main/settings.json
 ```
 
 > **Commit `.claude/settings.json` to your repository.** This ensures every developer using Claude Code in the project inherits the same security posture automatically, without individual configuration.
