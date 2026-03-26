@@ -1,4 +1,4 @@
-# 🔐 claude-code-hardened
+# 🔐 Claude Code Hardened
 
 > **Maximum-restriction security configuration for Claude Code — built for enterprise, high-security, and regulated environments on macOS, Windows, and Linux.**
 
