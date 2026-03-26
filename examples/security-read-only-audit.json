@@ -1,0 +1,70 @@
+{
+  "_comment": [
+    "claude-code-hardened — Read-Only Audit Mode",
+    "Use Case: Security reviews, code audits, vulnerability assessments,",
+    "  compliance reviews, or any session where Claude should ONLY read and report.",
+    "Assumptions:",
+    "  - Zero writes are permitted under any circumstance",
+    "  - Zero Bash execution is permitted under any circumstance",
+    "  - Claude may only read source code file types explicitly listed below",
+    "  - Intended for use by security engineers, auditors, or compliance reviewers",
+    "Instructions:",
+    "  Copy this file to your project root at .claude/settings.json",
+    "  For maximum assurance, also deploy managed_settings.json via MDM.",
+    "  This is the most restrictive profile in the examples directory."
+  ],
+
+  "permissions": {
+    "allow": [
+      "Read(**/*.ts)",
+      "Read(**/*.tsx)",
+      "Read(**/*.js)",
+      "Read(**/*.jsx)",
+      "Read(**/*.mjs)",
+      "Read(**/*.py)",
+      "Read(**/*.go)",
+      "Read(**/*.rs)",
+      "Read(**/*.java)",
+      "Read(**/*.kt)",
+      "Read(**/*.swift)",
+      "Read(**/*.c)",
+      "Read(**/*.cpp)",
+      "Read(**/*.h)",
+      "Read(**/*.cs)",
+      "Read(**/*.rb)",
+      "Read(**/*.php)",
+      "Read(**/*.md)",
+      "Read(**/*.txt)",
+      "Read(**/*.yaml)",
+      "Read(**/*.yml)",
+      "Read(**/*.toml)",
+      "Read(**/*.xml)",
+      "Read(**/*.html)",
+      "Read(**/*.css)",
+      "Read(**/*.scss)",
+      "Read(**/*.sql)",
+      "Read(**/*.sh)",
+      "Read(**/*.lock)",
+      "Read(**/.gitignore)",
+      "Read(**/Makefile)",
+      "Read(**/Dockerfile)",
+      "Read(**/*.dockerfile)"
+    ],
+
+    "deny": [
+      "Write(**/*)",
+      "Bash(*)",
+      "WebFetch(*)"
+    ]
+  },
+
+  "rules": [
+    "AUDIT MODE — READ ONLY: You are operating in a zero-write, zero-execute security audit mode. You may ONLY read files from the explicitly allowed list above. You must not write, create, modify, delete, or rename any file. You must not execute any command whatsoever. You must not make any network request.",
+
+    "YOUR ROLE: You are a security reviewer. Your outputs should be: (1) security findings documented as structured reports, (2) code analysis in plain text, (3) recommendations for remediation written as suggestions for a human to implement manually.",
+
+    "FINDINGS FORMAT: When you identify a security issue, format it as:\n  [SEVERITY: Critical/High/Medium/Low/Informational]\n  [FILE]: <path>\n  [LINE]: <line number if applicable>\n  [ISSUE]: <description>\n  [CWE]: <CWE-ID if applicable>\n  [RECOMMENDATION]: <remediation guidance>",
+
+    "SCOPE ACKNOWLEDGMENT: Begin your first response in any session by stating: 'Audit Mode Active — Read-only. No writes or commands will be executed. Ready to review: <project directory>.'"
+  ]
+}
