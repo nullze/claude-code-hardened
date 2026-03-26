@@ -72,7 +72,7 @@ claude-code-hardened/
 mkdir -p ~/.claude
 cp ~/.claude/settings.json ~/.claude/settings.json.bak 2>/dev/null || true
 curl -o ~/.claude/settings.json \
-  https://raw.githubusercontent.com/YOUR_ORG/claude-code-hardened/main/settings.json
+  https://raw.githubusercontent.com/nullze/claude-code-hardened/main/settings.json
 ```
 
 **Windows (PowerShell):**
