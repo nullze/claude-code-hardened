@@ -1,0 +1,82 @@
+{
+  "_comment": [
+    "claude-code-hardened — Python Project Minimal Allow-List",
+    "Use Case: Python codebases using pytest, ruff, mypy, and black.",
+    "Assumptions:",
+    "  - No dependency installation permitted (use a pre-approved venv)",
+    "  - No network access permitted",
+    "  - Test runner, linter, and formatter are pre-installed in the project venv",
+    "  - Project does not contain inline secrets (enforce via pre-commit + gitleaks)",
+    "Instructions:",
+    "  Copy this file to your project root at .claude/settings.json",
+    "  This file EXTENDS the base deny-list — it does not replace it.",
+    "  The managed_settings.json deny-list always takes precedence."
+  ],
+
+  "permissions": {
+    "allow": [
+      "Read(**/*.py)",
+      "Read(**/*.pyi)",
+      "Read(**/*.toml)",
+      "Read(**/*.cfg)",
+      "Read(**/*.ini)",
+      "Read(**/*.txt)",
+      "Read(**/*.md)",
+      "Read(**/*.yaml)",
+      "Read(**/*.yml)",
+      "Read(**/*.json)",
+      "Read(**/*.lock)",
+      "Read(**/.python-version)",
+      "Read(**/Makefile)",
+      "Read(**/Dockerfile)",
+      "Read(**/*.dockerfile)",
+
+      "Bash(git status)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+
+      "Bash(python3 -m pytest*)",
+      "Bash(pytest *)",
+      "Bash(pytest)",
+
+      "Bash(python3 -m ruff check*)",
+      "Bash(python3 -m ruff format --check*)",
+      "Bash(ruff check *)",
+      "Bash(ruff format --check *)",
+
+      "Bash(python3 -m mypy *)",
+      "Bash(mypy *)",
+
+      "Bash(python3 -m black --check *)",
+      "Bash(black --check *)",
+
+      "Bash(python3 -m flake8 *)",
+      "Bash(flake8 *)",
+
+      "Bash(python3 -m isort --check *)",
+      "Bash(isort --check *)",
+
+      "Bash(python3 -m bandit -r *)",
+      "Bash(bandit -r *)",
+
+      "Bash(ls *)",
+      "Bash(ls)",
+      "Bash(pwd)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(find . *)",
+      "Bash(grep *)",
+      "Bash(echo *)"
+    ]
+  },
+
+  "rules": [
+    "PROJECT CONTEXT: You are assisting with a Python project. Your permitted actions are: reading Python source files, running the pre-installed test suite, linter, type checker, and formatter. You must not install packages, modify pyproject.toml dependencies, or run any command not in the allow-list without explicit human approval.",
+    "VENV POLICY: The project virtual environment is pre-approved and pre-provisioned. You must not create, modify, or delete virtual environments, nor run pip install under any circumstance.",
+    "TEST RUNNER POLICY: You may run tests but you must report failures and propose fixes — you must not automatically modify test files to make tests pass without human review of the proposed change."
+  ]
+}
