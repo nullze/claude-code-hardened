@@ -54,66 +54,60 @@ Claude Code runs as a **local agentic process that inherits your OS user's full 
 
 ## Defense-in-Depth Architecture
 
-This configuration layers **four independent defenses** because no single mechanism is sufficient:
+This configuration layers **five independent defenses** because no single mechanism is sufficient:
 
-┌─────────────────────────────────────────────────────────────┐
-│  Layer 1: Permission Deny Rules                             │
-│  Blocks tool-level access (Read/Edit/Write/Bash/WebFetch)   │
-│  ⚠ Limitation: Bash prefix-match only; Read() denies don't  │
-│    prevent cat/head/tail reading the same files via Bash     │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 2: PreToolUse Hooks                                  │
-│  Regex scans the ENTIRE Bash command string, catching:      │
-│  - Forbidden commands after | && ; ` $()                    │
-│  - cat/head/tail targeting .env, .pem, .key, id_rsa, etc.   │
-│  - Pipe-to-shell (curl ... | bash)                          │
-│  - Subshell execution (sh -c, bash -c, eval, exec, source)  │
-│  - Encoding evasion (base64, xxd, openssl)                  │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 3: Sandbox Settings (managed-settings.json only)     │
-│  OS-level filesystem and network isolation:                  │
-│  - denyRead on credential directories                       │
-│  - denyWrite on system directories                          │
-│  - Zero outbound network (allowedDomains: [])               │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 4: MCP & Policy Lockdown (managed-settings.json)     │
-│  - allowManagedPermissionRulesOnly: true                    │
-│  - allowManagedHooksOnly: true                              │
-│  - allowManagedMcpServersOnly: true                         │
-│  - disableBypassPermissionsMode: "disable"                  │
-│  Users cannot add their own allow rules, hooks, or MCP      │
-│  servers to circumvent enterprise policy                    │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 5: CLAUDE.md Behavioral Rules                        │
-│  Soft controls enforced via Claude's instruction following:  │
-│  - Mandatory human approval before any write/execute         │
-│  - Credential zero-touch policy                             │
-│  - Prompt injection detection and reporting                 │
-│  - Scope lock to project directory                          │
-│  ⚠ These are behavioral, not hard controls — defense in     │
-│    depth only, not primary enforcement                      │
-└─────────────────────────────────────────────────────────────┘
+### Layer 1: Permission Deny Rules
+> **Blocks tool-level access (Read/Edit/Write/Bash/WebFetch)**
+>
+> ⚠️ *Limitation: Bash prefix-match only; `Read()` denies don't prevent `cat`/`head`/`tail` reading the same files via Bash*
+
+### Layer 2: PreToolUse Hooks
+> **Regex scans the ENTIRE Bash command string, catching:**
+> - Forbidden commands after `|` `&&` `;` `` ` `` `$()`
+> - `cat`/`head`/`tail` targeting `.env`, `.pem`, `.key`, `id_rsa`, etc.
+> - Pipe-to-shell (`curl ... | bash`)
+> - Subshell execution (`sh -c`, `bash -c`, `eval`, `exec`, `source`)
+> - Encoding evasion (`base64`, `xxd`, `openssl`)
+
+### Layer 3: Sandbox Settings *(managed-settings.json only)*
+> **OS-level filesystem and network isolation:**
+> - `denyRead` on credential directories
+> - `denyWrite` on system directories
+> - Zero outbound network (`allowedDomains: []`)
+
+### Layer 4: MCP & Policy Lockdown *(managed-settings.json only)*
+> - `allowManagedPermissionRulesOnly: true`
+> - `allowManagedHooksOnly: true`
+> - `allowManagedMcpServersOnly: true`
+> - `disableBypassPermissionsMode: "disable"`
+>
+> Users cannot add their own allow rules, hooks, or MCP servers to circumvent enterprise policy.
+
+### Layer 5: CLAUDE.md Behavioral Rules
+> **Soft controls enforced via Claude's instruction following:**
+> - Mandatory human approval before any write/execute
+> - Credential zero-touch policy
+> - Prompt injection detection and reporting
+> - Scope lock to project directory
+>
+> ⚠️ *These are behavioral, not hard controls — defense in depth only, not primary enforcement*
 
 ---
 
 ## Repository Structure
 
-
-claude-code-hardened/
-├── README.md                        # This file
-├── settings.json                    # User/project-level hardened config
-│                                    #   (permissions + hooks + env)
-├── managed-settings.json            # Enterprise MDM / server-managed policy
-│                                    #   (permissions + hooks + sandbox + MCP lockdown)
-├── CLAUDE.md                        # Behavioral security rules
-│                                    #   (approval gates, credential policy, prompt injection immunity)
-├── CONTRIBUTING.md                  # Contribution guidelines
-├── SECURITY.md                      # Responsible disclosure policy
-├── CHANGELOG.md                     # Version history
-└── examples/
-    ├── python-project.json          # Minimal allow-list for Python projects
-    ├── node-project.json            # Minimal allow-list for Node.js/TS projects
-    └── readonly-audit.json          # Zero-write audit/security review mode
+| File | Purpose |
+|---|---|
+| `README.md` | This file |
+| `settings.json` | User/project-level hardened config (permissions + hooks + env) |
+| `managed-settings.json` | Enterprise MDM / server-managed policy (permissions + hooks + sandbox + MCP lockdown) |
+| `CLAUDE.md` | Behavioral security rules (approval gates, credential policy, prompt injection immunity) |
+| `CONTRIBUTING.md` | Contribution guidelines |
+| `SECURITY.md` | Responsible disclosure policy |
+| `CHANGELOG.md` | Version history |
+| `examples/python-project.json` | Minimal allow-list for Python projects |
+| `examples/node-project.json` | Minimal allow-list for Node.js/TS projects |
+| `examples/readonly-audit.json` | Zero-write audit/security review mode |
 
 
 ### File Purposes & Key Differences
