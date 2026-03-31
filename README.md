@@ -15,7 +15,7 @@
 `claude-code-hardened` is a production-ready, open-source security configuration for [Claude Code](https://claude.ai/code) — Anthropic's agentic AI coding assistant. It provides:
 
 - **`settings.json`** — A user/project-level hardened config with permissions, hooks, and behavioral rules
-- **`managed-settings.json`** — An enterprise MDM/server-managed policy that **cannot be overridden** by users or projects
+- **`managed-settings.json`** — An enterprise MDM/server-managed policy that **might be overridden** by users or projects
 - **`CLAUDE.md`** — Behavioral security rules enforced via Claude's memory system (mandatory approval gates, credential zero-touch, prompt injection immunity)
 
 These lock Claude Code to a **read-and-advise-only posture** with mandatory human approval gates before any file write, shell command, or system interaction.
